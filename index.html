@@ -1,133 +1,342 @@
 <!DOCTYPE html>
-<html lang="es">
+<html class="dark" lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor Financiero Personal Pro</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ProFinance - Mi Gestor Personal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f48c25",
+                        "background-light": "#f8f7f5",
+                        "background-dark": "#0a0a0a",
+                        "obsidian-card": "rgba(25, 20, 15, 0.6)",
+                        "neon-emerald": "#10b981",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Montserrat", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .neon-glow-emerald {
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .orange-glow {
+            box-shadow: 0 0 20px rgba(244, 140, 37, 0.3);
+        }
+
+        body {
+            background-color: #0a0a0a;
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(244, 140, 37, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+        }
+
+        .hidden-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .visible-section {
+            display: block;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
-<body>
 
-    <header>
-        <div class="header-content">
-            <span class="logo">💰</span>
-            <h1>Mi Gestor Financiero</h1>
-        </div>
-    </header>
+<body class="font-display text-slate-100 min-h-screen">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
 
-    <main class="container">
-
-        <!-- SECCIÓN DE AÑOS -->
-        <section id="yearSection" class="section">
-            <div class="section-header">
-                <h2>Selecciona un Año</h2>
-                <p>Elige el periodo que deseas gestionar</p>
-            </div>
-            <div class="button-grid" id="yearsContainer">
-                <!-- Se generará dinámicamente -->
-                <button onclick="showMonths(2025)">2025</button>
-                <button onclick="showMonths(2026)">2026</button>
-            </div>
-        </section>
-
-        <!-- SECCIÓN DE MESES -->
-        <section id="monthSection" class="section hidden">
-            <div class="nav-header">
-                <button class="back-btn" onclick="goBack('year')">⬅ Volver</button>
-                <h2 id="selectedYearTitle"></h2>
-            </div>
-            <div class="button-grid" id="monthsContainer"></div>
-        </section>
-
-        <!-- SECCIÓN DE FORMULARIO / GESTIÓN -->
-        <section id="formSection" class="section hidden">
-            <div class="nav-header">
-                <button class="back-btn" onclick="goBack('month')">⬅ Volver</button>
-                <h2 id="selectedMonthTitle"></h2>
-            </div>
-
-            <!-- Resumen del Mes -->
-            <div class="summary-cards">
-                <div class="card summary income">
-                    <h3>Ingresos</h3>
-                    <p id="totalIncome">$0.00</p>
+        <!-- Navigation -->
+        <header class="sticky top-0 z-50 px-6 py-4 lg:px-20">
+            <nav class="glass-panel flex items-center justify-between px-6 py-3 rounded-2xl">
+                <div class="flex items-center gap-10">
+                    <div class="flex items-center gap-3 cursor-pointer" onclick="location.reload()">
+                        <div class="size-10 bg-primary flex items-center justify-center rounded-xl orange-glow">
+                            <span
+                                class="material-symbols-outlined text-background-dark font-bold">account_balance_wallet</span>
+                        </div>
+                        <h2 class="text-xl font-bold tracking-tight text-slate-100 uppercase">Pro<span
+                                class="text-primary">Finance</span></h2>
+                    </div>
                 </div>
-                <div class="card summary expense">
-                    <h3>Egresos</h3>
-                    <p id="totalExpense">$0.00</p>
+                <div class="flex items-center gap-6">
+                    <div class="hidden md:flex bg-white/5 p-1 rounded-full border border-white/10">
+                        <button
+                            class="px-4 py-1.5 text-xs font-bold rounded-full bg-primary text-background-dark orange-glow">PRIVATE
+                            STORAGE</button>
+                    </div>
                 </div>
-                <div class="card summary balance">
-                    <h3>Saldo Neto</h3>
-                    <p id="netBalance">$0.00</p>
-                </div>
-            </div>
+            </nav>
+        </header>
 
-            <div class="grid-layout">
-                <div class="card">
-                    <div class="form-title">Saldo Mes Anterior</div>
-                    <div class="input-group">
-                        <input type="number" id="prevMonthBalance" placeholder="Valor del mes anterior ($)">
-                        <button onclick="savePrevBalance()">Actualizar</button>
+        <main class="flex-1 px-6 pb-20 lg:px-20">
+
+            <!-- YEAR SELECTION SECTION -->
+            <section id="yearSection" class="visible-section mt-10 text-center">
+                <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-slate-100 mb-4">Bienvenido a ProFinance
+                </h1>
+                <p class="text-slate-400 font-body mb-10">Gestiona tus finanzas con total privacidad local.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto" id="yearsContainer">
+                    <!-- Dinámico -->
+                    <button onclick="showMonths(2025)"
+                        class="glass-panel p-8 rounded-3xl hover:border-primary/50 transition-all group">
+                        <h3 class="text-3xl font-bold group-hover:text-primary transition-colors">2025</h3>
+                        <p class="text-xs text-slate-500 mt-2 uppercase tracking-widest">Planificar año</p>
+                    </button>
+                    <button onclick="showMonths(2026)"
+                        class="glass-panel p-8 rounded-3xl hover:border-primary/50 transition-all group">
+                        <h3 class="text-3xl font-bold group-hover:text-primary transition-colors">2026</h3>
+                        <p class="text-xs text-slate-500 mt-2 uppercase tracking-widest">Planificar año</p>
+                    </button>
+                </div>
+            </section>
+
+            <!-- MONTH SELECTION SECTION -->
+            <section id="monthSection" class="hidden-section mt-10">
+                <div class="flex items-center gap-4 mb-8">
+                    <button onclick="goBack('year')"
+                        class="size-10 glass-panel rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors">
+                        <span class="material-symbols-outlined text-slate-400">arrow_back</span>
+                    </button>
+                    <h2 id="selectedYearTitle" class="text-3xl font-bold">Año 2025</h2>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="monthsContainer">
+                    <!-- Dinámico -->
+                </div>
+            </section>
+
+            <!-- MAIN DASHBOARD SECTION -->
+            <section id="formSection" class="hidden-section mt-6">
+
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+                    <div>
+                        <div class="flex items-center gap-4 mb-2">
+                            <button onclick="goBack('month')"
+                                class="size-8 glass-panel rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors">
+                                <span class="material-symbols-outlined text-sm text-slate-400">arrow_back</span>
+                            </button>
+                            <h1 id="selectedMonthTitle" class="text-4xl font-bold tracking-tight text-slate-100">Octubre
+                                2025</h1>
+                        </div>
+                        <p class="text-slate-400 font-body">Resumen financiero local y seguro.</p>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-3">
+                            <span class="text-xs font-bold text-slate-500 uppercase">Saldo Anterior:</span>
+                            <input type="number" id="prevMonthBalance"
+                                class="bg-transparent border-none text-sm font-bold w-24 focus:ring-0 p-0"
+                                placeholder="0">
+                            <button onclick="savePrevBalance()" class="text-primary hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-lg">save</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="form-title">Agregar Egreso</div>
-                    <div class="form-grid">
-                        <input type="text" id="expDesc" placeholder="Descripción">
-                        <input type="number" id="expAmount" placeholder="Costo ($)">
-                        <select id="expMethod">
-                            <option value="">Medio de Pago</option>
+                <!-- Bento Grid Layout -->
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 auto-rows-[220px]">
+                    <!-- Net Worth Card -->
+                    <div
+                        class="lg:col-span-2 lg:row-span-1 glass-panel rounded-3xl p-8 relative overflow-hidden flex flex-col justify-between group">
+                        <div class="absolute -right-10 -top-10 size-48 bg-primary/10 blur-[80px] rounded-full"></div>
+                        <div>
+                            <p class="text-slate-400 text-sm font-bold tracking-widest uppercase mb-1">Saldo Neto Total
+                            </p>
+                            <h3 id="netBalance" class="text-5xl font-bold tracking-tighter text-primary orange-glow">
+                                $0.00</h3>
+                        </div>
+                        <div class="flex items-center gap-4 mt-6 z-10">
+                            <div class="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                <div id="balanceProgress"
+                                    class="h-full bg-primary w-[0%] rounded-full shadow-[0_0_8px_rgba(244,140,37,0.5)] transition-all duration-1000">
+                                </div>
+                            </div>
+                            <p class="text-[10px] font-bold text-slate-500 uppercase">Cálculo en tiempo real</p>
+                        </div>
+                    </div>
+
+                    <!-- Income Card -->
+                    <div
+                        class="lg:col-span-1 glass-panel rounded-3xl p-6 flex flex-col justify-between hover:border-neon-emerald/30 transition-all group">
+                        <div class="flex justify-between items-start">
+                            <div
+                                class="size-12 rounded-2xl bg-neon-emerald/10 flex items-center justify-center text-neon-emerald">
+                                <span class="material-symbols-outlined">trending_up</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 text-xs font-bold uppercase mb-1">Ingresos</p>
+                            <h4 id="totalIncome" class="text-2xl font-bold text-neon-emerald neon-glow-emerald">$0.00
+                            </h4>
+                        </div>
+                    </div>
+
+                    <!-- Expenses Card -->
+                    <div
+                        class="lg:col-span-1 glass-panel rounded-3xl p-6 flex flex-col justify-between hover:border-red-500/30 transition-all group">
+                        <div class="flex justify-between items-start">
+                            <div
+                                class="size-12 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500">
+                                <span class="material-symbols-outlined">trending_down</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 text-xs font-bold uppercase mb-1">Egresos</p>
+                            <h4 id="totalExpense" class="text-2xl font-bold text-red-500">$0.00</h4>
+                        </div>
+                    </div>
+
+                    <!-- Transaction Ledger -->
+                    <div class="lg:col-span-3 lg:row-span-2 glass-panel rounded-3xl overflow-hidden flex flex-col">
+                        <div class="px-8 py-6 border-b border-white/5 flex items-center justify-between">
+                            <h3 class="text-xl font-bold font-body">Historial de Movimientos</h3>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-4 space-y-3" id="transactionList">
+                            <!-- Dinámico -->
+                        </div>
+                    </div>
+
+                    <!-- Market Watch / Info Card -->
+                    <div class="lg:col-span-1 lg:row-span-2 glass-panel rounded-3xl p-6 flex flex-col gap-6">
+                        <h3 class="font-bold font-body text-slate-300 uppercase text-xs tracking-widest">Resumen Mensual
+                        </h3>
+                        <div id="statsSummary" class="space-y-6">
+                            <!-- Dinámico -->
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-white/5">
+                            <div class="bg-primary/10 rounded-2xl p-4 border border-primary/20">
+                                <p class="text-[10px] font-bold text-primary uppercase mb-2">Tip de Ahorro</p>
+                                <p class="text-xs text-slate-300 leading-relaxed font-body">Define una categoría para
+                                    cada gasto y visualiza dónde puedes optimizar este mes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Floating Add Button -->
+        <button onclick="toggleModal(true)"
+            class="fixed bottom-8 right-8 size-16 bg-primary rounded-full flex items-center justify-center text-background-dark orange-glow hover:scale-110 transition-transform active:scale-95 group z-[100]">
+            <span class="material-symbols-outlined text-3xl font-bold">add</span>
+        </button>
+
+        <!-- Transaction Modal -->
+        <div id="transactionModal" class="fixed inset-0 z-[101] hidden flex items-center justify-center p-6">
+            <div class="absolute inset-0 bg-background-dark/80 backdrop-blur-sm" onclick="toggleModal(false)"></div>
+            <div class="glass-panel w-full max-w-lg rounded-3xl p-8 relative z-10 animate-fade-in">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-2xl font-bold">Nuevo Registro</h3>
+                    <button onclick="toggleModal(false)" class="text-slate-500 hover:text-white">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+
+                <div class="flex bg-white/5 p-1 rounded-xl mb-6 border border-white/10">
+                    <button id="typeExp" onclick="setEntryType('expense')"
+                        class="flex-1 py-2 text-xs font-bold rounded-lg bg-primary text-background-dark transition-all">EGRESO</button>
+                    <button id="typeInc" onclick="setEntryType('income')"
+                        class="flex-1 py-2 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all">INGRESO</button>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Descripción</label>
+                        <input type="text" id="entryDesc"
+                            class="w-full bg-white/5 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all"
+                            placeholder="Ej: Supermercado">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Monto ($)</label>
+                            <input type="number" id="entryAmount"
+                                class="w-full bg-white/5 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Fecha</label>
+                            <input type="date" id="entryDate"
+                                class="w-full bg-white/5 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all">
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Método</label>
+                        <select id="entryMethod"
+                            class="w-full bg-white/5 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all">
+                            <option value="">Seleccionar...</option>
                             <option>Efectivo</option>
                             <option>Débito</option>
                             <option>Transferencia</option>
                             <option>PSE</option>
                         </select>
-                        <input type="date" id="expDate">
-                        <select id="expType">
-                            <option value="">Tipo de gasto</option>
+                    </div>
+                    <div id="categoryContainer" class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Tipo de Gasto</label>
+                        <select id="entryType"
+                            class="w-full bg-white/5 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all">
+                            <option value="">Seleccionar...</option>
                             <option>Comida</option>
                             <option>Transporte</option>
                             <option>Entretenimiento</option>
                             <option>Servicios</option>
                             <option>Otro</option>
                         </select>
-                        <textarea id="expComment" placeholder="Comentario (opcional)"></textarea>
-                        <button class="btn-primary" onclick="addTransaction('expense')">Guardar Egreso</button>
                     </div>
-                </div>
-
-                <div class="card">
-                    <div class="form-title">Agregar Ingreso</div>
-                    <div class="form-grid">
-                        <input type="text" id="incDesc" placeholder="Descripción">
-                        <input type="number" id="incAmount" placeholder="Adquirido ($)">
-                        <select id="incMethod">
-                            <option value="">Medio de Pago</option>
-                            <option>Efectivo</option>
-                            <option>Transferencia</option>
-                            <option>PSE</option>
-                        </select>
-                        <input type="date" id="incDate">
-                        <button class="btn-success" onclick="addTransaction('income')">Guardar Ingreso</button>
+                    <div class="pt-4">
+                        <button onclick="executeAdd()"
+                            class="w-full bg-primary text-background-dark font-bold py-4 rounded-2xl orange-glow hover:opacity-90 transition-all">GUARDAR
+                            MOVIMIENTO</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Listado de Movimientos -->
-            <div class="card table-container">
-                <div class="form-title">Movimientos del Mes</div>
-                <div class="list-container" id="transactionList">
-                    <!-- Dinámico -->
-                </div>
-            </div>
-
-        </section>
-
-    </main>
+    </div>
 
     <script src="script.js"></script>
 </body>
+
 </html>
