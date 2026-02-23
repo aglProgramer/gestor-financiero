@@ -3,8 +3,8 @@
 Una aplicación web moderna y minimalista para llevar el control de tus finanzas personales por año y mes.
 
 <img width="1920" height="988" alt="Captura de pantalla 2026-02-23 032321" src="https://github.com/user-attachments/assets/d46a0692-7d98-4639-bc92-fccba9b701ca" />
-
-
+<img width="1893" height="989" alt="Captura de pantalla 2026-02-23 032515" src="https://github.com/user-attachments/assets/ce1c8e53-8417-438d-88c0-bcdfb2396e00" />
+<img width="1882" height="988" alt="Captura de pantalla 2026-02-23 032600" src="https://github.com/user-attachments/assets/63e05c9f-bb89-4eb0-a205-38cc1fb62429" />
 
 ## ✨ Características
 
