@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor Financiero Personal Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <span class="logo">💰</span>
+            <h1>Mi Gestor Financiero</h1>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- SECCIÓN DE AÑOS -->
+        <section id="yearSection" class="section">
+            <div class="section-header">
+                <h2>Selecciona un Año</h2>
+                <p>Elige el periodo que deseas gestionar</p>
+            </div>
+            <div class="button-grid" id="yearsContainer">
+                <!-- Se generará dinámicamente -->
+                <button onclick="showMonths(2025)">2025</button>
+                <button onclick="showMonths(2026)">2026</button>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE MESES -->
+        <section id="monthSection" class="section hidden">
+            <div class="nav-header">
+                <button class="back-btn" onclick="goBack('year')">⬅ Volver</button>
+                <h2 id="selectedYearTitle"></h2>
+            </div>
+            <div class="button-grid" id="monthsContainer"></div>
+        </section>
+
+        <!-- SECCIÓN DE FORMULARIO / GESTIÓN -->
+        <section id="formSection" class="section hidden">
+            <div class="nav-header">
+                <button class="back-btn" onclick="goBack('month')">⬅ Volver</button>
+                <h2 id="selectedMonthTitle"></h2>
+            </div>
+
+            <!-- Resumen del Mes -->
+            <div class="summary-cards">
+                <div class="card summary income">
+                    <h3>Ingresos</h3>
+                    <p id="totalIncome">$0.00</p>
+                </div>
+                <div class="card summary expense">
+                    <h3>Egresos</h3>
+                    <p id="totalExpense">$0.00</p>
+                </div>
+                <div class="card summary balance">
+                    <h3>Saldo Neto</h3>
+                    <p id="netBalance">$0.00</p>
+                </div>
+            </div>
+
+            <div class="grid-layout">
+                <div class="card">
+                    <div class="form-title">Saldo Mes Anterior</div>
+                    <div class="input-group">
+                        <input type="number" id="prevMonthBalance" placeholder="Valor del mes anterior ($)">
+                        <button onclick="savePrevBalance()">Actualizar</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="form-title">Agregar Egreso</div>
+                    <div class="form-grid">
+                        <input type="text" id="expDesc" placeholder="Descripción">
+                        <input type="number" id="expAmount" placeholder="Costo ($)">
+                        <select id="expMethod">
+                            <option value="">Medio de Pago</option>
+                            <option>Efectivo</option>
+                            <option>Débito</option>
+                            <option>Transferencia</option>
+                            <option>PSE</option>
+                        </select>
+                        <input type="date" id="expDate">
+                        <select id="expType">
+                            <option value="">Tipo de gasto</option>
+                            <option>Comida</option>
+                            <option>Transporte</option>
+                            <option>Entretenimiento</option>
+                            <option>Servicios</option>
+                            <option>Otro</option>
+                        </select>
+                        <textarea id="expComment" placeholder="Comentario (opcional)"></textarea>
+                        <button class="btn-primary" onclick="addTransaction('expense')">Guardar Egreso</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="form-title">Agregar Ingreso</div>
+                    <div class="form-grid">
+                        <input type="text" id="incDesc" placeholder="Descripción">
+                        <input type="number" id="incAmount" placeholder="Adquirido ($)">
+                        <select id="incMethod">
+                            <option value="">Medio de Pago</option>
+                            <option>Efectivo</option>
+                            <option>Transferencia</option>
+                            <option>PSE</option>
+                        </select>
+                        <input type="date" id="incDate">
+                        <button class="btn-success" onclick="addTransaction('income')">Guardar Ingreso</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listado de Movimientos -->
+            <div class="card table-container">
+                <div class="form-title">Movimientos del Mes</div>
+                <div class="list-container" id="transactionList">
+                    <!-- Dinámico -->
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
