@@ -2,7 +2,9 @@
 
 Una aplicación web moderna y minimalista para llevar el control de tus finanzas personales por año y mes.
 
-![Vista Previa](https://via.placeholder.com/800x450.png?text=Vista+Previa+del+Gestor+Financiero) <!-- Puedes reemplazar esto con una captura real luego -->
+<img width="1920" height="988" alt="Captura de pantalla 2026-02-23 032321" src="https://github.com/user-attachments/assets/d46a0692-7d98-4639-bc92-fccba9b701ca" />
+
+
 
 ## ✨ Características
 
