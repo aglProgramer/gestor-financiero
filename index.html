@@ -6,7 +6,11 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>ProFinance - Mi Gestor Personal</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="tailwind-config.js"></script>
+    <script src="storage.js"></script>
+    <script src="calculations.js"></script>
+    <script src="ui.js"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap"
         rel="stylesheet" />
@@ -112,11 +116,19 @@
                     <div
                         class="lg:col-span-2 lg:row-span-1 glass-panel rounded-3xl p-8 relative overflow-hidden flex flex-col justify-between group">
                         <div class="absolute -right-10 -top-10 size-48 bg-primary/10 blur-[80px] rounded-full"></div>
-                        <div>
-                            <p class="text-slate-400 text-sm font-bold tracking-widest uppercase mb-1">Saldo Neto Total
-                            </p>
-                            <h3 id="netBalance" class="text-5xl font-bold tracking-tighter text-primary orange-glow">
-                                $0.00</h3>
+                        <div class="flex justify-between items-start z-10">
+                            <div>
+                                <p class="text-slate-400 text-sm font-bold tracking-widest uppercase mb-1">Saldo Neto
+                                    Total
+                                </p>
+                                <h3 id="netBalance"
+                                    class="text-5xl font-bold tracking-tighter text-primary orange-glow">
+                                    $0.00</h3>
+                            </div>
+                            <!-- Canvas para Gráfica de Balance (Doughnut) -->
+                            <div class="size-24">
+                                <canvas id="balanceChart"></canvas>
+                            </div>
                         </div>
                         <div class="flex items-center gap-4 mt-6 z-10">
                             <div class="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
