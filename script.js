@@ -16,7 +16,53 @@ window.ProApp = {
 
     init() {
         this.data = window.ProStorage.loadData();
-        // Cargar años si fuera necesario, por ahora manual en HTML
+        this.renderYears();
+    },
+
+    renderYears() {
+        const container = document.getElementById("yearsContainer");
+        if (!container) return;
+        container.innerHTML = "";
+
+        const startYear = 2024;
+        const endYear = 2030;
+
+        for (let year = startYear; year <= endYear; year++) {
+            const btn = document.createElement("button");
+            btn.className = "glass-panel p-8 rounded-3xl hover:border-primary/50 transition-all group";
+            btn.innerHTML = `
+                <h3 class="text-3xl font-bold group-hover:text-primary transition-colors">${year}</h3>
+                <p class="text-[10px] text-slate-500 mt-2 uppercase tracking-widest font-bold">Gestionar Gestión</p>
+            `;
+            btn.onclick = () => this.showMonths(year);
+            container.appendChild(btn);
+        }
+    },
+
+    updateActionVisibility(show) {
+        const btn = document.getElementById("addTransactionBtn");
+        if (btn) {
+            if (show) {
+                btn.classList.remove("hidden");
+                btn.classList.add("flex");
+            } else {
+                btn.classList.add("hidden");
+                btn.classList.remove("flex");
+            }
+        }
+    },
+
+    startApp() {
+        const introSection = document.getElementById("introSection");
+        const yearSection = document.getElementById("yearSection");
+
+        this.updateActionVisibility(false);
+        introSection.classList.replace("visible-section", "hidden-section");
+        setTimeout(() => {
+            introSection.classList.add("hidden");
+            yearSection.classList.remove("hidden");
+            yearSection.classList.replace("hidden-section", "visible-section");
+        }, 300);
     },
 
     showMonths(year) {
@@ -24,6 +70,7 @@ window.ProApp = {
         const yearSection = document.getElementById("yearSection");
         const monthSection = document.getElementById("monthSection");
 
+        this.updateActionVisibility(false);
         yearSection.classList.replace("visible-section", "hidden-section");
         setTimeout(() => {
             yearSection.classList.add("hidden");
@@ -53,6 +100,7 @@ window.ProApp = {
         const monthSection = document.getElementById("monthSection");
         const formSection = document.getElementById("formSection");
 
+        this.updateActionVisibility(true);
         monthSection.classList.replace("visible-section", "hidden-section");
         setTimeout(() => {
             monthSection.classList.add("hidden");
@@ -68,6 +116,8 @@ window.ProApp = {
         const yearS = document.getElementById("yearSection");
         const monthS = document.getElementById("monthSection");
         const formS = document.getElementById("formSection");
+
+        this.updateActionVisibility(false);
 
         if (level === 'year') {
             monthS.classList.replace("visible-section", "hidden-section");
@@ -100,7 +150,8 @@ window.ProApp = {
                 this.editingId = null;
                 modalTitle.innerText = "Nuevo Registro";
                 this.resetModal();
-                document.getElementById('entryDate').valueAsDate = new Date();
+                // Por defecto, sugerir el día de hoy
+                document.getElementById('entryDay').value = new Date().getDate();
             }
         } else {
             modal.classList.add('hidden');
@@ -135,21 +186,27 @@ window.ProApp = {
         const monthData = window.ProStorage.ensureMonthExists(this.data, this.selectedYear, this.selectedMonth);
         const desc = document.getElementById('entryDesc').value;
         const amount = parseFloat(document.getElementById('entryAmount').value);
-        const date = document.getElementById('entryDate').value;
+        const day = parseInt(document.getElementById('entryDay').value);
         const method = document.getElementById('entryMethod').value;
         const category = document.getElementById('entryType').value;
 
-        if (!desc || isNaN(amount)) {
-            alert("Completa descripción y monto.");
+        if (!desc || isNaN(amount) || isNaN(day)) {
+            alert("Completa descripción, monto y día.");
             return;
         }
+
+        // Construir fecha completa basada en la selección de navegación
+        const monthIndex = this.months.indexOf(this.selectedMonth) + 1;
+        const formattedMonth = monthIndex < 10 ? `0${monthIndex}` : monthIndex;
+        const formattedDay = day < 10 ? `0${day}` : day;
+        const fullDate = `${this.selectedYear}-${formattedMonth}-${formattedDay}`;
 
         const transaction = {
             id: this.editingId || Date.now(),
             type: this.currentEntryType,
             desc,
             amount,
-            date,
+            date: fullDate,
             method,
             category: this.currentEntryType === 'expense' ? category : 'Ingreso'
         };
@@ -177,7 +234,11 @@ window.ProApp = {
             this.setEntryType(t.type);
             document.getElementById('entryDesc').value = t.desc;
             document.getElementById('entryAmount').value = t.amount;
-            document.getElementById('entryDate').value = t.date;
+
+            // Extraer el día de la fecha guardada (YYYY-MM-DD)
+            const dayPart = t.date.split('-')[2];
+            document.getElementById('entryDay').value = parseInt(dayPart);
+
             document.getElementById('entryMethod').value = t.method;
             if (t.type === 'expense') {
                 document.getElementById('entryType').value = t.category;
@@ -221,10 +282,12 @@ window.ProApp = {
         window.ProUI.renderTransactionList('transactionList', monthData.transactions);
         window.ProUI.updateStats('statsSummary', stats.categoryStats, stats.expense);
         window.ProUI.renderBalanceChart('balanceChart', stats.income, stats.expense);
+        window.ProUI.renderCategoryChart('categoryChart', stats.categoryStats);
     }
 };
 
 // Vinculación global de funciones disparadas por HTML
+window.startApp = () => window.ProApp.startApp();
 window.showMonths = (year) => window.ProApp.showMonths(year);
 window.showForm = (month) => window.ProApp.showForm(month);
 window.goBack = (level) => window.ProApp.goBack(level);

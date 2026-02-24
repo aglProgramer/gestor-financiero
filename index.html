@@ -47,23 +47,41 @@
 
         <main class="flex-1 px-6 pb-20 lg:px-20">
 
-            <!-- YEAR SELECTION SECTION -->
-            <section id="yearSection" class="visible-section mt-10 text-center">
-                <h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-slate-100 mb-4">Bienvenido a ProFinance
+            <!-- INTRO SECTION -->
+            <section id="introSection" class="visible-section mt-20 text-center max-w-3xl mx-auto">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6">
+                    <span class="relative flex h-2 w-2">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                    </span>
+                    100% Privado & Seguro
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-bold tracking-tight text-slate-100 mb-6 font-display">
+                    Toma el control de tu <span class="text-primary italic">futuro</span> financiero
                 </h1>
-                <p class="text-slate-400 font-body mb-10">Gestiona tus finanzas con total privacidad local.</p>
+                <p class="text-lg text-slate-400 font-body mb-10 leading-relaxed">
+                    Gestiona tus ingresos y gastos con una herramienta profesional diseñada para la privacidad. Tus
+                    datos nunca salen de tu dispositivo.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button onclick="window.ProApp.startApp()"
+                        class="px-10 py-4 bg-primary text-background-dark font-bold rounded-2xl orange-glow hover:scale-105 transition-all text-lg min-w-[200px]">
+                        Empezar Ahora
+                    </button>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest italic">
+                        Sin registros • Sin servidores • Solo control
+                    </p>
+                </div>
+            </section>
+
+            <!-- YEAR SELECTION SECTION -->
+            <section id="yearSection" class="hidden-section hidden mt-10 text-center">
+                <h2 class="text-4xl lg:text-5xl font-bold tracking-tight text-slate-100 mb-4">Selecciona el Año</h2>
+                <p class="text-slate-400 font-body mb-10">Organiza tu planificación financiera por periodos anuales.</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto" id="yearsContainer">
-                    <!-- Dinámico -->
-                    <button onclick="showMonths(2025)"
-                        class="glass-panel p-8 rounded-3xl hover:border-primary/50 transition-all group">
-                        <h3 class="text-3xl font-bold group-hover:text-primary transition-colors">2025</h3>
-                        <p class="text-xs text-slate-500 mt-2 uppercase tracking-widest">Planificar año</p>
-                    </button>
-                    <button onclick="showMonths(2026)"
-                        class="glass-panel p-8 rounded-3xl hover:border-primary/50 transition-all group">
-                        <h3 class="text-3xl font-bold group-hover:text-primary transition-colors">2026</h3>
-                        <p class="text-xs text-slate-500 mt-2 uppercase tracking-widest">Planificar año</p>
-                    </button>
+                    <!-- Generado dinámicamente por script.js -->
                 </div>
             </section>
 
@@ -183,6 +201,9 @@
 
                     <!-- Market Watch / Info Card -->
                     <div class="lg:col-span-1 lg:row-span-2 glass-panel rounded-3xl p-6 flex flex-col gap-6">
+                        <div class="h-32 mb-2">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
                         <h3 class="font-bold font-body text-slate-300 uppercase text-xs tracking-widest">Resumen Mensual
                         </h3>
                         <div id="statsSummary" class="space-y-6">
@@ -201,8 +222,8 @@
         </main>
 
         <!-- Floating Add Button -->
-        <button onclick="toggleModal(true)"
-            class="fixed bottom-8 right-8 size-16 bg-primary rounded-full flex items-center justify-center text-background-dark orange-glow hover:scale-110 transition-transform active:scale-95 group z-[100]">
+        <button id="addTransactionBtn" onclick="toggleModal(true)"
+            class="fixed bottom-8 right-8 size-16 bg-primary rounded-full hidden items-center justify-center text-background-dark orange-glow hover:scale-110 transition-transform active:scale-95 group z-[100]">
             <span class="material-symbols-outlined text-3xl font-bold">add</span>
         </button>
 
@@ -228,42 +249,43 @@
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Descripción</label>
                         <input type="text" id="entryDesc"
-                            class="w-full bg-white/5 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all"
+                            class="w-full bg-slate-900 text-slate-100 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all"
                             placeholder="Ej: Supermercado">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1">
                             <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Monto ($)</label>
                             <input type="number" id="entryAmount"
-                                class="w-full bg-white/5 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all">
+                                class="w-full bg-slate-900 text-slate-100 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all">
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Fecha</label>
-                            <input type="date" id="entryDate"
-                                class="w-full bg-white/5 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Día del Mes</label>
+                            <input type="number" id="entryDay" min="1" max="31"
+                                class="w-full bg-slate-900 text-slate-100 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all"
+                                placeholder="1-31">
                         </div>
                     </div>
                     <div class="space-y-1">
                         <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Método</label>
                         <select id="entryMethod"
-                            class="w-full bg-white/5 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all">
-                            <option value="">Seleccionar...</option>
-                            <option>Efectivo</option>
-                            <option>Débito</option>
-                            <option>Transferencia</option>
-                            <option>PSE</option>
+                            class="w-full bg-slate-900 text-slate-100 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all">
+                            <option value="" class="bg-slate-900">Seleccionar...</option>
+                            <option class="bg-slate-900">Efectivo</option>
+                            <option class="bg-slate-900">Débito</option>
+                            <option class="bg-slate-900">Transferencia</option>
+                            <option class="bg-slate-900">PSE</option>
                         </select>
                     </div>
                     <div id="categoryContainer" class="space-y-1">
                         <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Tipo de Gasto</label>
                         <select id="entryType"
-                            class="w-full bg-white/5 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all">
-                            <option value="">Seleccionar...</option>
-                            <option>Comida</option>
-                            <option>Transporte</option>
-                            <option>Entretenimiento</option>
-                            <option>Servicios</option>
-                            <option>Otro</option>
+                            class="w-full bg-slate-900 text-slate-100 border-white/10 rounded-xl px-4 py-3 focus:border-primary focus:ring-0 transition-all">
+                            <option value="" class="bg-slate-900">Seleccionar...</option>
+                            <option class="bg-slate-900">Comida</option>
+                            <option class="bg-slate-900">Transporte</option>
+                            <option class="bg-slate-900">Entretenimiento</option>
+                            <option class="bg-slate-900">Servicios</option>
+                            <option class="bg-slate-900">Otro</option>
                         </select>
                     </div>
                     <div class="pt-4">
